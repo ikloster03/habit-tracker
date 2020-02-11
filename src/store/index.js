@@ -19,11 +19,17 @@ export default new Vuex.Store({
       { id: 5, title: 'Play table tennis' },
     ],
     habitHistories: [
-      { id: 1, habit_id: 1, date: '10.02.20' },
-      { id: 2, habit_id: 2, date: '10.02.20' },
-      { id: 3, habit_id: 3, date: '09.02.20' },
-      { id: 4, habit_id: 3, date: '10.02.20' },
+      { id: 1, habit_id: 1, date: '11.02.2020' },
+      { id: 2, habit_id: 2, date: '10.02.2020' },
+      { id: 3, habit_id: 3, date: '09.02.2020' },
+      { id: 4, habit_id: 3, date: '10.02.2020' },
+      { id: 5, habit_id: 4, date: '08.02.2020' },
+      { id: 6, habit_id: 5, date: '09.02.2020' },
     ],
+  },
+  getters: {
+    isHabitMark: state => (habitId, date) =>
+      state.habitHistories.find(h => h.habit_id === habitId && h.date === date),
   },
   mutations: {
     addHabit(state, habit) {
