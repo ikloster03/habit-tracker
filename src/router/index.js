@@ -8,12 +8,12 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Overview',
+    name: 'overview',
     component: Overview,
   },
   {
-    path: '/habit/{id}',
-    name: 'Habit',
+    path: '/habit/:habitId',
+    name: 'habit',
     component: Habit,
   },
 ]
