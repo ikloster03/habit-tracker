@@ -12,6 +12,7 @@ Vue.use(Vuex)
 
 const SYNC_HISTORY = 'SYNC_HISTORY'
 const ADD_HABIT = 'ADD_HABIT'
+const UPDATE_HABIT = 'UPDATE_HABIT'
 
 export default new Vuex.Store({
   state: {
@@ -47,6 +48,10 @@ export default new Vuex.Store({
         title,
       })
     },
+    [UPDATE_HABIT](state, { habitId, title }) {
+      const habit = state.habits.find(h => h.id === habitId)
+      habit.title = title
+    },
     [SYNC_HISTORY](state, { habitId, dates, maxId }) {
       state.habitHistories = state.habitHistories.filter(
         h => h.habit_id !== habitId,
@@ -65,6 +70,9 @@ export default new Vuex.Store({
     addHabit({ commit, getters }, { title }) {
       let habitId = getters.maxHabitId + 1
       commit(ADD_HABIT, { habitId, title })
+    },
+    updateHabit({ commit }, { habitId, title }) {
+      commit(UPDATE_HABIT, { habitId, title })
     },
     syncHistory({ commit, getters }, { habitId, dates }) {
       let maxId = getters.maxHistoryId
