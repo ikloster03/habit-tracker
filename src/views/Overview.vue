@@ -83,7 +83,7 @@ export default {
       return days
     },
     openModal() {
-      this.$modal.show('habit-modal')
+      this.$modal.show('habit-modal', { edit: false })
     },
   },
   data() {

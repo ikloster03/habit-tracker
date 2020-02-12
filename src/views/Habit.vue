@@ -2,7 +2,8 @@
   <main>
     <wrapper>
       <router-link to="/">Back</router-link>
-      <page-title>Habit: {{ title }}</page-title>
+      <page-title>{{ title }}</page-title>
+      <a href="" @click.prevent="openModal()">Edit</a>
     </wrapper>
     <wrapper>
       <date-picker mode="multiple" v-model="dates" color="blue" is-inline />
@@ -42,6 +43,13 @@ export default {
       const habitHistories = this.histories(habitId)
 
       return habitHistories.map(h => moment(h.date, 'DD.MM.YYYY').toDate())
+    },
+    openModal() {
+      this.$modal.show('habit-modal', {
+        habitId: parseInt(this.$route.params.habitId),
+        title: this.title,
+        edit: true,
+      })
     },
   },
   watch: {
