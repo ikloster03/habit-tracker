@@ -37,7 +37,7 @@ export default {
       const habitId = parseInt(this.$route.params.habitId)
       const habitHistories = this.histories(habitId)
 
-      return habitHistories.map(h => moment(h).toDate())
+      return habitHistories.map(h => moment(h.date, 'DD.MM.YYYY').toDate())
     },
   },
   data() {
@@ -47,7 +47,7 @@ export default {
   },
   mounted() {
     this.dates = this.historiesByHabit()
-  }
+  },
 }
 </script>
 

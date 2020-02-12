@@ -32,7 +32,7 @@ export default new Vuex.Store({
     isHabitMark: state => (habitId, date) =>
       state.habitHistories.find(h => h.habit_id === habitId && h.date === date),
     histories: state => habitId =>
-      state.habitHistories.filter(h => h.id === habitId),
+      state.habitHistories.filter(h => h.habit_id === habitId),
   },
   mutations: {
     addHabit(state, habit) {
