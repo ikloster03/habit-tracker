@@ -1,11 +1,13 @@
 <template>
   <div id="app">
     <router-view />
+    <habit-modal />
   </div>
 </template>
 
 <script>
 import { injectGlobal } from 'vue-styled-components'
+import HabitModal from '@/components/HabitModal.vue'
 
 injectGlobal`
   #app, #app * {
@@ -19,6 +21,9 @@ injectGlobal`
 
 export default {
   name: 'App',
+  components: {
+    'habit-modal': HabitModal,
+  },
 }
 </script>
 
