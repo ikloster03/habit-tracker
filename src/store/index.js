@@ -11,6 +11,7 @@ Vue.use(Vuex)
 //   .database()
 
 const SYNC_HISTORY = 'SYNC_HISTORY'
+const ADD_HABIT = 'ADD_HABIT'
 
 export default new Vuex.Store({
   state: {
@@ -40,8 +41,11 @@ export default new Vuex.Store({
     maxHistoryId: state => Math.max(...state.habitHistories.map(h => h.id)),
   },
   mutations: {
-    addHabit(state, habit) {
-      state.habits.push(habit)
+    [ADD_HABIT](state, { habitId, title }) {
+      state.habits.push({
+        id: habitId,
+        title,
+      })
     },
     [SYNC_HISTORY](state, { habitId, dates, maxId }) {
       state.habitHistories = state.habitHistories.filter(
@@ -58,6 +62,10 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    addHabit({ commit, getters }, { title }) {
+      let habitId = getters.maxHabitId + 1
+      commit(ADD_HABIT, { habitId, title })
+    },
     syncHistory({ commit, getters }, { habitId, dates }) {
       let maxId = getters.maxHistoryId
       commit(SYNC_HISTORY, { habitId, dates, maxId })
