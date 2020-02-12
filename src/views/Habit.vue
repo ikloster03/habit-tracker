@@ -1,6 +1,9 @@
 <template>
   <main>
-    <page-title>Habit: {{ title }}</page-title>
+    <wrapper>
+      <router-link to="/">Back</router-link>
+      <page-title>Habit: {{ title }}</page-title>
+    </wrapper>
     <wrapper>
       <date-picker mode="multiple" v-model="dates" color="blue" is-inline />
     </wrapper>
