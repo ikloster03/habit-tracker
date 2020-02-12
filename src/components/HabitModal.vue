@@ -1,6 +1,16 @@
 <template>
-  <modal name="habit-modal" :adaptive="true" :scrollable="true" width="290px">
-    <wrapper display="block" pt="30px">
+  <modal
+    name="habit-modal"
+    :adaptive="true"
+    :scrollable="true"
+    width="290px"
+    @before-open="beforeOpen"
+  >
+    <wrapper v-if="edit" display="block" pt="30px">
+      <text-input type="text" v-model="habitTitle" />
+      <a href="" @click.prevent="update()">Update Habit</a>
+    </wrapper>
+    <wrapper v-else display="block" pt="30px">
       <text-input type="text" v-model="habitTitle" />
       <a href="" @click.prevent="create()">Create Habit</a>
     </wrapper>
@@ -21,12 +31,29 @@ export default {
   data() {
     return {
       habitTitle: '',
+      edit: false,
+      habitId: null,
     }
   },
   methods: {
-    ...mapActions(['addHabit']),
+    ...mapActions(['addHabit', 'updateHabit']),
+    beforeOpen({
+      params: { edit = false, title = '', habitId = null } = {
+        edit: false,
+        title: '',
+        habitId: null,
+      },
+    }) {
+      this.edit = edit
+      this.habitTitle = title
+      this.habitId = habitId
+    },
     create() {
       this.addHabit({ title: this.habitTitle })
+      this.$modal.hide('habit-modal')
+    },
+    update() {
+      this.updateHabit({ habitId: this.habitId, title: this.habitTitle })
       this.$modal.hide('habit-modal')
     },
   },
