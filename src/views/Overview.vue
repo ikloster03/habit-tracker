@@ -27,6 +27,7 @@
         </overview-column>
       </overview-row>
     </overview>
+    <add-habbit-button @click.prevent.native="openModal()">+</add-habbit-button>
   </main>
 </template>
 
@@ -39,6 +40,7 @@ import Overview, {
   OverviewColumn,
   OverviewTitle,
 } from '@/components/Overview'
+import AddHabbitButton from '@/components/AddHabbitButton'
 
 // const HabitTitle = styled.a`
 //   font-size: 14px;
@@ -54,6 +56,7 @@ export default {
     'overview-row': OverviewRow,
     'overview-column': OverviewColumn,
     'overview-title': OverviewTitle,
+    'add-habbit-button': AddHabbitButton,
     // 'habit-title': HabitTitle,
   },
   computed: {
@@ -78,6 +81,9 @@ export default {
       }
 
       return days
+    },
+    openModal() {
+      this.$modal.show('habit-modal')
     },
   },
   data() {
