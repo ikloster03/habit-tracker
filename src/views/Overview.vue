@@ -24,7 +24,6 @@
           :key="`habit-col-${col}`"
         >
           <div v-if="isHabitMark(habit.id, formatDate(day))">x</div>
-          <div></div>
         </overview-column>
       </overview-row>
     </overview>

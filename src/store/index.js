@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import moment from 'moment'
 // import firebase from 'firebase/app'
 // import 'firebase/database'
 
@@ -8,6 +9,8 @@ Vue.use(Vuex)
 // export const db = firebase
 //   .initializeApp({ databaseURL: process.env.VUE_APP_FIREBASE_URL })
 //   .database()
+
+const SYNC_HISTORY = 'SYNC_HISTORY'
 
 export default new Vuex.Store({
   state: {
@@ -29,16 +32,36 @@ export default new Vuex.Store({
   },
   getters: {
     habit: state => habitId => state.habits.find(h => h.id === habitId),
+    maxHabitId: state => Math.max(...state.habits.map(h => h.id)),
     isHabitMark: state => (habitId, date) =>
       state.habitHistories.find(h => h.habit_id === habitId && h.date === date),
     histories: state => habitId =>
       state.habitHistories.filter(h => h.habit_id === habitId),
+    maxHistoryId: state => Math.max(...state.habitHistories.map(h => h.id)),
   },
   mutations: {
     addHabit(state, habit) {
       state.habits.push(habit)
     },
+    [SYNC_HISTORY](state, { habitId, dates, maxId }) {
+      state.habitHistories = state.habitHistories.filter(
+        h => h.habit_id !== habitId,
+      )
+
+      for (let i = 0; i < dates.length; i++) {
+        state.habitHistories.push({
+          id: i + maxId + 1,
+          habit_id: habitId,
+          date: moment(dates[i]).format('DD.MM.YYYY'),
+        })
+      }
+    },
   },
-  actions: {},
+  actions: {
+    syncHistory({ commit, getters }, { habitId, dates }) {
+      let maxId = getters.maxHistoryId
+      commit(SYNC_HISTORY, { habitId, dates, maxId })
+    },
+  },
   modules: {},
 })

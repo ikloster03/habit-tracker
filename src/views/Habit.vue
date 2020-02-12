@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import moment from 'moment'
 // import Calendar from 'v-calendar/lib/components/calendar.umd'
 import DatePicker from 'v-calendar/lib/components/date-picker.umd'
@@ -36,11 +36,23 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['syncHistory']),
     historiesByHabit() {
       const habitId = parseInt(this.$route.params.habitId)
       const habitHistories = this.histories(habitId)
 
       return habitHistories.map(h => moment(h.date, 'DD.MM.YYYY').toDate())
+    },
+  },
+  watch: {
+    dates: {
+      handler() {
+        this.syncHistory({
+          habitId: parseInt(this.$route.params.habitId),
+          dates: this.dates,
+        })
+      },
+      deep: true,
     },
   },
   data() {
