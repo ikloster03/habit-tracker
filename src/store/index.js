@@ -13,6 +13,7 @@ Vue.use(Vuex)
 const SYNC_HISTORY = 'SYNC_HISTORY'
 const ADD_HABIT = 'ADD_HABIT'
 const UPDATE_HABIT = 'UPDATE_HABIT'
+const SET_USER = 'SET_USER'
 
 export default new Vuex.Store({
   state: {
@@ -31,6 +32,7 @@ export default new Vuex.Store({
       { id: 5, habit_id: 4, date: '08.02.2020' },
       { id: 6, habit_id: 5, date: '09.02.2020' },
     ],
+    user: null,
   },
   getters: {
     habit: state => habitId => state.habits.find(h => h.id === habitId),
@@ -65,6 +67,9 @@ export default new Vuex.Store({
         })
       }
     },
+    [SET_USER](state, { user }) {
+      state.user = user
+    },
   },
   actions: {
     addHabit({ commit, getters }, { title }) {
@@ -77,6 +82,9 @@ export default new Vuex.Store({
     syncHistory({ commit, getters }, { habitId, dates }) {
       let maxId = getters.maxHistoryId
       commit(SYNC_HISTORY, { habitId, dates, maxId })
+    },
+    setCurrentUser({ commit }, { user }) {
+      commit(SET_USER, { user })
     },
   },
   modules: {},
