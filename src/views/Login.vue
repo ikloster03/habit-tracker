@@ -8,20 +8,32 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import firebase from 'firebase'
 
 export default {
   name: 'Login',
   methods: {
+    ...mapActions(['setCurrentUser']),
     googleLogin() {
       const provider = new firebase.auth.GoogleAuthProvider()
 
       firebase
         .auth()
         .signInWithPopup(provider)
-        .then((data) => {
-          console.log('data', data)
-          // this.$router.replace('home')
+        .then(() => {
+          const currentUser = firebase.auth().currentUser
+
+          if (currentUser) {
+            this.setCurrentUser({
+              user: {
+                name: currentUser.displayName,
+                email: currentUser.email,
+                image: currentUser.photoURL,
+              },
+            })
+          }
+          this.$router.replace('/')
         })
         .catch(err => {
           alert('Oops, ', +err.message)
