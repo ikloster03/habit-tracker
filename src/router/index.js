@@ -44,7 +44,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const currentUser = firebase.auth().currentUser
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-  console.log(currentUser, requiresAuth)
+  // console.log(currentUser, requiresAuth)
   if (requiresAuth && !currentUser) {
     next('/login')
   } else if (!requiresAuth && currentUser) {
