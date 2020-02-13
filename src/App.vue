@@ -6,6 +6,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+import firebase from 'firebase'
 import { injectGlobal } from 'vue-styled-components'
 import HabitModal from '@/components/HabitModal.vue'
 
@@ -23,6 +25,22 @@ export default {
   name: 'App',
   components: {
     'habit-modal': HabitModal,
+  },
+  methods: {
+    ...mapActions(['setCurrentUser']),
+  },
+  created() {
+    const currentUser = firebase.auth().currentUser
+
+    if (currentUser) {
+      this.setCurrentUser({
+        user: {
+          name: currentUser.displayName,
+          email: currentUser.email,
+          image: currentUser.photoURL,
+        },
+      })
+    }
   },
 }
 </script>
