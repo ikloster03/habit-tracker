@@ -6,19 +6,22 @@
     width="290px"
     @before-open="beforeOpen"
   >
-    <wrapper v-if="edit" display="block" pt="30px">
+    <wrapper v-if="type === 'create'" display="block" pt="30px">
       <text-input type="text" v-model="habitTitle" />
-      <a href="" @click.prevent="update()">Update Habit</a>
+      <a href="" @click.prevent="submit()">Create Habit</a>
     </wrapper>
-    <wrapper v-else display="block" pt="30px">
+    <wrapper v-if="type === 'update'" display="block" pt="30px">
       <text-input type="text" v-model="habitTitle" />
-      <a href="" @click.prevent="create()">Create Habit</a>
+      <a href="" @click.prevent="submit()">Update Habit</a>
+    </wrapper>
+    <wrapper v-if="type === 'delete'" display="block" pt="30px">
+      <a href="" @click.prevent="submit()">Delete Habit</a>
     </wrapper>
   </modal>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import Wrapper from '@/components/Wrapper'
 import TextInput from '@/components/TextInput'
 
@@ -31,29 +34,36 @@ export default {
   data() {
     return {
       habitTitle: '',
-      edit: false,
+      type: '',
       habitId: null,
     }
   },
+  computed: {
+    ...mapState(['user']),
+  },
   methods: {
-    ...mapActions(['addHabit', 'updateHabit']),
+    ...mapActions('habits', ['create', 'update', 'remove']),
     beforeOpen({
-      params: { edit = false, title = '', habitId = null } = {
-        edit: false,
+      params: { type = '', title = '', habitId = null } = {
+        type: '',
         title: '',
         habitId: null,
       },
     }) {
-      this.edit = edit
+      this.type = type
       this.habitTitle = title
       this.habitId = habitId
     },
-    create() {
-      this.addHabit({ title: this.habitTitle })
-      this.$modal.hide('habit-modal')
-    },
-    update() {
-      this.updateHabit({ habitId: this.habitId, title: this.habitTitle })
+    async submit() {
+      if (this.type === 'create') {
+        await this.create({ title: this.habitTitle })
+      } else if (this.type === 'update') {
+        await this.update({ habitId: this.habitId, title: this.habitTitle })
+      } else if (this.type === 'delete') {
+        await this.remove({ habitId: this.habitId })
+        this.$router.replace('/')
+      }
+
       this.$modal.hide('habit-modal')
     },
   },

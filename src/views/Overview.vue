@@ -29,7 +29,7 @@
           </overview-column>
         </overview-row>
       </overview>
-      <add-habbit-button @click.prevent.native="openModal()"
+      <add-habbit-button @click.prevent.native="openCreateModal()"
         >+</add-habbit-button
       >
     </main>
@@ -66,7 +66,10 @@ export default {
     // 'habit-title': HabitTitle,
   },
   computed: {
-    ...mapState(['habits', 'habitHistories']),
+    ...mapState(['habitHistories']),
+    ...mapState({
+      habits: state => state.habits.habits,
+    }),
     ...mapGetters(['isHabitMark']),
   },
   filters: {
@@ -88,8 +91,8 @@ export default {
 
       return days
     },
-    openModal() {
-      this.$modal.show('habit-modal', { edit: false })
+    openCreateModal() {
+      this.$modal.show('habit-modal', { type: 'create' })
     },
   },
   data() {

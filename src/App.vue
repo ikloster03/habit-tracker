@@ -28,18 +28,21 @@ export default {
   },
   methods: {
     ...mapActions(['setCurrentUser']),
+    ...mapActions('habits', ['fetch']),
   },
   created() {
     const currentUser = firebase.auth().currentUser
-
+    // console.log('currentUser', currentUser)
     if (currentUser) {
       this.setCurrentUser({
         user: {
+          uid: currentUser.uid,
           name: currentUser.displayName,
           email: currentUser.email,
           image: currentUser.photoURL,
         },
       })
+      this.fetch()
     }
   },
 }

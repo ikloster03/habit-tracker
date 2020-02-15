@@ -18,6 +18,7 @@ export default {
   name: 'Login',
   methods: {
     ...mapActions(['setCurrentUser']),
+    ...mapActions('habits', ['fetch']),
     googleLogin() {
       const provider = new firebase.auth.GoogleAuthProvider()
 
@@ -30,11 +31,13 @@ export default {
           if (currentUser) {
             this.setCurrentUser({
               user: {
+                uid: currentUser.uid,
                 name: currentUser.displayName,
                 email: currentUser.email,
                 image: currentUser.photoURL,
               },
             })
+            this.fetch()
           }
           this.$router.replace('/')
         })

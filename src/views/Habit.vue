@@ -3,7 +3,8 @@
     <wrapper>
       <router-link to="/">Back</router-link>
       <page-title>{{ title }}</page-title>
-      <a href="" @click.prevent="openModal()">Edit</a>
+      <div><a href="" @click.prevent="openEditModal()">Edit</a></div>
+      <div><a href="" @click.prevent="openDeleteModal()">Delete</a></div>
     </wrapper>
     <wrapper>
       <date-picker mode="multiple" v-model="dates" color="blue" is-inline />
@@ -27,10 +28,11 @@ export default {
     DatePicker,
   },
   computed: {
-    ...mapState(['habitHistories']),
-    ...mapGetters(['habit', 'histories']),
+    ...mapState(['history']),
+    ...mapGetters(['histories']),
+    ...mapGetters('habits', ['habit']),
     title() {
-      const habitId = parseInt(this.$route.params.habitId)
+      const habitId = this.$route.params.habitId
       const habit = this.habit(habitId)
 
       return habit ? habit.title : ''
@@ -39,16 +41,23 @@ export default {
   methods: {
     ...mapActions(['syncHistory']),
     historiesByHabit() {
-      const habitId = parseInt(this.$route.params.habitId)
-      const habitHistories = this.histories(habitId)
+      const habitId = this.$route.params.habitId
+      const history = this.histories(habitId)
 
-      return habitHistories.map(h => moment(h.date, 'DD.MM.YYYY').toDate())
+      return history.map(h => moment(h.date, 'DD.MM.YYYY').toDate())
     },
-    openModal() {
+    openEditModal() {
       this.$modal.show('habit-modal', {
-        habitId: parseInt(this.$route.params.habitId),
+        habitId: this.$route.params.habitId,
         title: this.title,
-        edit: true,
+        type: 'update',
+      })
+    },
+    openDeleteModal() {
+      this.$modal.show('habit-modal', {
+        habitId: this.$route.params.habitId,
+        title: this.title,
+        type: 'delete',
       })
     },
   },
@@ -56,7 +65,7 @@ export default {
     dates: {
       handler() {
         this.syncHistory({
-          habitId: parseInt(this.$route.params.habitId),
+          habitId: this.$route.params.habitId,
           dates: this.dates,
         })
       },
