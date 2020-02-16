@@ -66,11 +66,10 @@ export default {
     // 'habit-title': HabitTitle,
   },
   computed: {
-    ...mapState(['habitHistories']),
     ...mapState({
       habits: state => state.habits.habits,
     }),
-    ...mapGetters(['isHabitMark']),
+    ...mapGetters('history', ['isHabitMark']),
   },
   filters: {
     formatDay(m) {
