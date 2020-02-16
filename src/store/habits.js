@@ -25,10 +25,9 @@ const actions = {
       console.error(error)
     }
   },
-  async update({ dispatch, rootState }, { habitId, title }) {
+  async update({ dispatch }, { habitId, title }) {
     try {
       await habits.update({
-        userId: rootState.user.uid,
         habitId,
         data: { title },
       })

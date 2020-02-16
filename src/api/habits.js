@@ -11,9 +11,8 @@ export const create = ({ userId, data }) => {
   })
 }
 
-export const update = ({ userId, habitId, data }) => {
-  return habits.doc(habitId).set({
-    userId,
+export const update = ({ habitId, data }) => {
+  return habits.doc(habitId).update({
     ...data,
   })
 }
