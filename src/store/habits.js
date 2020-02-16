@@ -11,8 +11,8 @@ const getters = {
 const actions = {
   async fetch({ commit, rootState }) {
     try {
-      const data = await habits.fetch({ userId: rootState.user.uid })
-      commit(FETCH_HABITS, { docs: data.docs })
+      const { docs } = await habits.fetch({ userId: rootState.user.uid })
+      commit(FETCH_HABITS, { docs })
     } catch (error) {
       console.error(error)
     }
