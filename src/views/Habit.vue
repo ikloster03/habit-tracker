@@ -7,14 +7,22 @@
       <div><a href="" @click.prevent="openDeleteModal()">Delete</a></div>
     </wrapper>
     <wrapper>
-      <date-picker mode="multiple" v-model="dates" color="blue" is-inline />
+      <date-picker
+        mode="multiple"
+        v-model="dates"
+        color="blue"
+        is-inline
+        :first-day-of-week="2"
+        :max-date="new Date()"
+      />
     </wrapper>
   </main>
 </template>
 
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
-import moment from 'moment'
+// import moment from 'moment'
+import firebase from 'firebase'
 // import Calendar from 'v-calendar/lib/components/calendar.umd'
 import DatePicker from 'v-calendar/lib/components/date-picker.umd'
 import PageTitle from '@/components/PageTitle'
@@ -28,8 +36,8 @@ export default {
     DatePicker,
   },
   computed: {
-    ...mapState(['history']),
-    ...mapGetters(['histories']),
+    ...mapState('history', ['history']),
+    // ...mapGetters(['histories']),
     ...mapGetters('habits', ['habit']),
     title() {
       const habitId = this.$route.params.habitId
@@ -40,12 +48,12 @@ export default {
   },
   methods: {
     ...mapActions(['syncHistory']),
-    historiesByHabit() {
-      const habitId = this.$route.params.habitId
-      const history = this.histories(habitId)
+    // historiesByHabit() {
+    //   const habitId = this.$route.params.habitId
+    //   const history = this.histories(habitId)
 
-      return history.map(h => moment(h.date, 'DD.MM.YYYY').toDate())
-    },
+    //   return history.map(h => moment(h.date, 'DD.MM.YYYY').toDate())
+    // },
     openEditModal() {
       this.$modal.show('habit-modal', {
         habitId: this.$route.params.habitId,
@@ -64,10 +72,15 @@ export default {
   watch: {
     dates: {
       handler() {
-        this.syncHistory({
+        const history = this.dates.map(date => ({
           habitId: this.$route.params.habitId,
-          dates: this.dates,
-        })
+          date: firebase.firestore.Timestamp.fromDate(date),
+        }))
+        console.log('history', history)
+        // this.syncHistory({
+        //   habitId: this.$route.params.habitId,
+        //   dates: this.dates,
+        // })
       },
       deep: true,
     },
@@ -78,7 +91,7 @@ export default {
     }
   },
   mounted() {
-    this.dates = this.historiesByHabit()
+    // this.dates = this.historiesByHabit()
   },
 }
 </script>
